@@ -1,0 +1,205 @@
+<% layout('layout') %>
+
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">Quality Cars Under $3000</h1>
+                <p class="lead mb-4">Find your perfect affordable vehicle with our extensive inventory of quality used cars. Multiple payment options available including Cash App, Zelle, PayPal and more.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="/cars" class="btn btn-light btn-lg">
+                        <i class="bi bi-car-front-fill"></i> Browse Cars
+                    </a>
+                    <a href="/search" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-search"></i> Search Now
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="/images/hero-car.jpg" alt="Quality Used Car" class="img-fluid rounded shadow" style="max-height: 400px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <h3 class="text-primary fw-bold"><%= stats.totalCars || 0 %></h3>
+                    <p class="mb-0">Cars Available</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <h3 class="text-primary fw-bold"><%= stats.totalOrders || 0 %></h3>
+                    <p class="mb-0">Happy Customers</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <h3 class="text-primary fw-bold">7</h3>
+                    <p class="mb-0">Payment Options</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cars Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Featured Vehicles</h2>
+            <p class="lead text-muted">Check out our latest arrivals and best deals</p>
+        </div>
+
+        <% if (featuredCars && featuredCars.length > 0) { %>
+            <div class="row">
+                <% featuredCars.forEach(function(car) { %>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <% if (car.images && car.images.length > 0) { %>
+                                <img src="/uploads/<%= car.images[0] %>" class="card-img-top" alt="<%= car.getTitle() %>" style="height: 250px; object-fit: cover;">
+                            <% } else { %>
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                    <i class="bi bi-car-front text-muted" style="font-size: 4rem;"></i>
+                                </div>
+                            <% } %>
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><%= car.getTitle() %></h5>
+                                <p class="card-text text-muted flex-grow-1">
+                                    <small>
+                                        <i class="bi bi-speedometer2"></i> <%= car.mileage.toLocaleString() %> miles •
+                                        <i class="bi bi-fuel-pump"></i> <%= car.fuelType %> •
+                                        <i class="bi bi-gear"></i> <%= car.transmission %>
+                                    </small>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h4 text-primary fw-bold mb-0"><%= car.getFormattedPrice() %></span>
+                                    <a href="/cars/<%= car._id %>" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="/cars" class="btn btn-outline-primary btn-lg">View All Cars</a>
+            </div>
+        <% } else { %>
+            <div class="text-center">
+                <div class="py-5">
+                    <i class="bi bi-car-front text-muted" style="font-size: 4rem;"></i>
+                    <h3 class="text-muted mt-3">No cars available at the moment</h3>
+                    <p class="text-muted">Check back soon for new arrivals!</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<!-- Payment Methods Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="display-6 fw-bold">Multiple Payment Options</h2>
+            <p class="lead text-muted">We accept various payment methods for your convenience</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="row text-center">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-cash-coin text-success" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Cash App</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-bank text-primary" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Chime</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-lightning-charge text-warning" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Zelle</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-apple text-dark" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Apple Pay</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-paypal text-info" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">PayPal</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-credit-card text-danger" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Varo</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="payment-method p-3">
+                            <i class="bi bi-gift text-purple" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Gift Cards</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-6 fw-bold mb-3">Ready to Find Your Car?</h2>
+                <p class="lead mb-4">Contact us today to learn more about our available vehicles or to schedule a viewing.</p>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="contact-item">
+                            <i class="bi bi-telephone-fill text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Call Us</h5>
+                            <a href="tel:+14704998139" class="text-decoration-none">+1 (470) 499-8139</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Email Us</h5>
+                            <a href="mailto:frankrooney474@gmail.com" class="text-decoration-none">frankrooney474@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="contact-item">
+                            <i class="bi bi-telegram text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Telegram</h5>
+                            <a href="https://t.me/carsforsaleunder3000" target="_blank" class="text-decoration-none">@carsforsaleunder3000</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="/contact" class="btn btn-primary btn-lg me-2">Contact Us</a>
+                    <a href="/cars" class="btn btn-outline-primary btn-lg">Browse Cars</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

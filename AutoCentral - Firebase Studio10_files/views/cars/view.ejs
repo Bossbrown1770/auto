@@ -1,0 +1,209 @@
+<% layout('../layout') %>
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/cars">Inventory</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= car.getTitle() %></li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Car Images -->
+        <div class="col-lg-8">
+            <% if (car.images && car.images.length > 0) { %>
+                <div id="carCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <% car.images.forEach(function(image, index) { %>
+                            <button type="button" data-bs-target="#carCarousel" data-bs-slide-to="<%= index %>" <% if (index === 0) { %>class="active"<% } %>></button>
+                        <% }); %>
+                    </div>
+                    
+                    <div class="carousel-inner">
+                        <% car.images.forEach(function(image, index) { %>
+                            <div class="carousel-item <% if (index === 0) { %>active<% } %>">
+                                <img src="/uploads/<%= image %>" class="d-block w-100 rounded" alt="<%= car.getTitle() %>" style="height: 500px; object-fit: cover;">
+                            </div>
+                        <% }); %>
+                    </div>
+                    
+                    <% if (car.images.length > 1) { %>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    <% } %>
+                </div>
+            <% } else { %>
+                <div class="bg-light d-flex align-items-center justify-content-center rounded mb-3" style="height: 500px;">
+                    <i class="bi bi-car-front text-muted" style="font-size: 6rem;"></i>
+                </div>
+            <% } %>
+
+            <!-- Car Details -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">Vehicle Details</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><strong>Make:</strong> <%= car.make %></li>
+                                <li><strong>Model:</strong> <%= car.model %></li>
+                                <li><strong>Year:</strong> <%= car.year %></li>
+                                <li><strong>Mileage:</strong> <%= car.mileage.toLocaleString() %> miles</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><strong>Fuel Type:</strong> <%= car.fuelType %></li>
+                                <li><strong>Transmission:</strong> <%= car.transmission %></li>
+                                <li><strong>Price:</strong> <span class="text-primary fw-bold"><%= car.getFormattedPrice() %></span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <% if (car.features && car.features.length > 0) { %>
+                        <div class="mt-3">
+                            <h5>Features:</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <% car.features.forEach(function(feature) { %>
+                                    <span class="badge bg-secondary"><%= feature %></span>
+                                <% }); %>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <div class="mt-3">
+                        <h5>Description:</h5>
+                        <p><%= car.description %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Section -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 2rem;">
+                <div class="card-header text-center">
+                    <h3 class="display-4 text-primary fw-bold mb-0"><%= car.getFormattedPrice() %></h3>
+                    <small class="text-muted">Final Price - No Hidden Fees</small>
+                </div>
+                <div class="card-body">
+                    <% if (car.isAvailable) { %>
+                        <a href="/orders/create/<%= car._id %>" class="btn btn-success btn-lg w-100 mb-3">
+                            <i class="bi bi-cart-plus"></i> Order Now
+                        </a>
+                        
+                        <div class="text-center mb-3">
+                            <small class="text-muted">Multiple payment options available</small>
+                        </div>
+                        
+                        <!-- Payment Methods -->
+                        <div class="payment-methods">
+                            <h6 class="text-center mb-3">Accepted Payment Methods:</h6>
+                            <div class="row text-center g-2">
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <i class="bi bi-cash-coin text-success"></i>
+                                        <small class="d-block">Cash App</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <i class="bi bi-lightning-charge text-warning"></i>
+                                        <small class="d-block">Zelle</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <i class="bi bi-paypal text-info"></i>
+                                        <small class="d-block">PayPal</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <i class="bi bi-apple text-dark"></i>
+                                        <small class="d-block">Apple Pay</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <i class="bi bi-bank text-primary"></i>
+                                        <small class="d-block">Chime</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <i class="bi bi-credit-card text-danger"></i>
+                                        <small class="d-block">Varo</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class="alert alert-warning text-center">
+                            <h5><i class="bi bi-exclamation-triangle"></i> Not Available</h5>
+                            <p class="mb-0">This car is no longer available</p>
+                        </div>
+                    <% } %>
+                    
+                    <!-- Contact Info -->
+                    <hr>
+                    <h6 class="text-center mb-3">Questions? Contact Us:</h6>
+                    <div class="d-grid gap-2">
+                        <a href="tel:+14704998139" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-telephone"></i> Call: (470) 499-8139
+                        </a>
+                        <a href="mailto:frankrooney474@gmail.com" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-envelope"></i> Email Us
+                        </a>
+                        <a href="https://t.me/carsforsaleunder3000" target="_blank" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-telegram"></i> Telegram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Similar Cars -->
+    <% if (similarCars && similarCars.length > 0) { %>
+        <div class="mt-5">
+            <h3 class="mb-4">You Might Also Like</h3>
+            <div class="row">
+                <% similarCars.forEach(function(similarCar) { %>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <% if (similarCar.images && similarCar.images.length > 0) { %>
+                                <img src="/uploads/<%= similarCar.images[0] %>" class="card-img-top" alt="<%= similarCar.getTitle() %>" style="height: 200px; object-fit: cover;">
+                            <% } else { %>
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="bi bi-car-front text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                            <% } %>
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title"><%= similarCar.getTitle() %></h6>
+                                <p class="card-text text-muted">
+                                    <small><%= similarCar.mileage.toLocaleString() %> miles</small>
+                                </p>
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold"><%= similarCar.getFormattedPrice() %></span>
+                                        <a href="/cars/<%= similarCar._id %>" class="btn btn-sm btn-primary">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    <% } %>
+</div>

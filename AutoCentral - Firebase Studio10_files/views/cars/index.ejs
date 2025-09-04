@@ -1,0 +1,176 @@
+<% layout('../layout') %>
+
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold">Car Inventory</h1>
+            <p class="lead text-muted">Browse our collection of quality used cars under $3000</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <% if (pagination && pagination.totalCars) { %>
+                <h4 class="text-primary"><%= pagination.totalCars %> Cars Available</h4>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link p-0" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+                            <i class="bi bi-funnel"></i> Filters
+                        </button>
+                    </h5>
+                </div>
+                <div class="collapse <% if (Object.keys(filters || {}).length > 0) { %>show<% } %>" id="filterCollapse">
+                    <div class="card-body">
+                        <form action="/cars" method="GET" class="row g-3">
+                            <div class="col-md-3">
+                                <label for="make" class="form-label">Make</label>
+                                <select name="make" id="make" class="form-select">
+                                    <option value="">All Makes</option>
+                                    <% if (filterOptions && filterOptions.makes) { %>
+                                        <% filterOptions.makes.forEach(function(make) { %>
+                                            <option value="<%= make %>" <% if (filters && filters.make === make) { %>selected<% } %>><%= make %></option>
+                                        <% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label for="year" class="form-label">Year</label>
+                                <select name="year" id="year" class="form-select">
+                                    <option value="">All Years</option>
+                                    <% if (filterOptions && filterOptions.years) { %>
+                                        <% filterOptions.years.forEach(function(year) { %>
+                                            <option value="<%= year %>" <% if (filters && parseInt(filters.year) === year) { %>selected<% } %>><%= year %></option>
+                                        <% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <label for="minPrice" class="form-label">Min Price</label>
+                                <input type="number" name="minPrice" id="minPrice" class="form-control" placeholder="$0" min="0" max="3000" value="<%= filters ? filters.minPrice || '' : '' %>">
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <label for="maxPrice" class="form-label">Max Price</label>
+                                <input type="number" name="maxPrice" id="maxPrice" class="form-control" placeholder="$3000" min="0" max="3000" value="<%= filters ? filters.maxPrice || '' : '' %>">
+                            </div>
+                            
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-search"></i> Filter
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <% if (filters && Object.keys(filters).length > 0) { %>
+                            <div class="mt-3">
+                                <a href="/cars" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-x-circle"></i> Clear Filters
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cars Grid -->
+    <% if (cars && cars.length > 0) { %>
+        <div class="row">
+            <% cars.forEach(function(car) { %>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <% if (car.images && car.images.length > 0) { %>
+                            <img src="/uploads/<%= car.images[0] %>" class="card-img-top" alt="<%= car.getTitle() %>" style="height: 250px; object-fit: cover;">
+                        <% } else { %>
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="bi bi-car-front text-muted" style="font-size: 4rem;"></i>
+                            </div>
+                        <% } %>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><%= car.getTitle() %></h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    <i class="bi bi-speedometer2"></i> <%= car.mileage.toLocaleString() %> miles<br>
+                                    <i class="bi bi-fuel-pump"></i> <%= car.fuelType %> • 
+                                    <i class="bi bi-gear"></i> <%= car.transmission %>
+                                </small>
+                            </p>
+                            
+                            <% if (car.features && car.features.length > 0) { %>
+                                <div class="mb-2">
+                                    <% car.features.slice(0, 3).forEach(function(feature, index) { %>
+                                        <span class="badge bg-secondary me-1"><%= feature %></span>
+                                    <% }); %>
+                                    <% if (car.features.length > 3) { %>
+                                        <span class="text-muted">+<%= car.features.length - 3 %> more</span>
+                                    <% } %>
+                                </div>
+                            <% } %>
+                            
+                            <div class="card-text flex-grow-1">
+                                <%= car.description.substring(0, 100) %><% if (car.description.length > 100) { %>...<% } %>
+                            </div>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h4 text-primary fw-bold mb-0"><%= car.getFormattedPrice() %></span>
+                                    <a href="/cars/<%= car._id %>" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <!-- Pagination -->
+        <% if (pagination && pagination.totalPages > 1) { %>
+            <nav aria-label="Car inventory pagination">
+                <ul class="pagination justify-content-center">
+                    <% if (pagination.hasPrev) { %>
+                        <li class="page-item">
+                            <a class="page-link" href="?<%= new URLSearchParams({...filters, page: pagination.currentPage - 1}).toString() %>">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </a>
+                        </li>
+                    <% } %>
+                    
+                    <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+                        <li class="page-item <% if (i === pagination.currentPage) { %>active<% } %>">
+                            <a class="page-link" href="?<%= new URLSearchParams({...filters, page: i}).toString() %>"><%= i %></a>
+                        </li>
+                    <% } %>
+                    
+                    <% if (pagination.hasNext) { %>
+                        <li class="page-item">
+                            <a class="page-link" href="?<%= new URLSearchParams({...filters, page: pagination.currentPage + 1}).toString() %>">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+        <% } %>
+    <% } else { %>
+        <!-- No Cars Found -->
+        <div class="text-center py-5">
+            <i class="bi bi-car-front text-muted" style="font-size: 5rem;"></i>
+            <h3 class="text-muted mt-3">No cars found</h3>
+            <% if (filters && Object.keys(filters).length > 0) { %>
+                <p class="text-muted">Try adjusting your filters or <a href="/cars">view all cars</a></p>
+            <% } else { %>
+                <p class="text-muted">Check back soon for new arrivals!</p>
+            <% } %>
+        </div>
+    <% } %>
+</div>

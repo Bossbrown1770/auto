@@ -1,0 +1,199 @@
+<% layout('../../layout') %>
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><i class="bi bi-plus-circle"></i> Add New Car</h1>
+        <a href="/admin/cars" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Cars
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form action="/admin/cars/add" method="POST" enctype="multipart/form-data" novalidate>
+                        <!-- Basic Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Basic Information</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="make" class="form-label">Make *</label>
+                                    <input type="text" class="form-control" id="make" name="make" required>
+                                    <div class="invalid-feedback">Make is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="model" class="form-label">Model *</label>
+                                    <input type="text" class="form-control" id="model" name="model" required>
+                                    <div class="invalid-feedback">Model is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="year" class="form-label">Year *</label>
+                                    <input type="number" class="form-control" id="year" name="year" min="1900" max="<%= new Date().getFullYear() + 1 %>" required>
+                                    <div class="invalid-feedback">Valid year is required</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing & Specs -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Pricing & Specifications</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price ($) *</label>
+                                    <input type="number" class="form-control" id="price" name="price" min="1" max="3000" step="0.01" required>
+                                    <div class="invalid-feedback">Price must be between $1 and $3000</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="mileage" class="form-label">Mileage *</label>
+                                    <input type="number" class="form-control" id="mileage" name="mileage" min="0" required>
+                                    <div class="invalid-feedback">Mileage is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="fuelType" class="form-label">Fuel Type *</label>
+                                    <select class="form-select" id="fuelType" name="fuelType" required>
+                                        <option value="">Select fuel type</option>
+                                        <option value="Gasoline">Gasoline</option>
+                                        <option value="Diesel">Diesel</option>
+                                        <option value="Electric">Electric</option>
+                                        <option value="Hybrid">Hybrid</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a fuel type</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transmission & Features -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="transmission" class="form-label">Transmission *</label>
+                                    <select class="form-select" id="transmission" name="transmission" required>
+                                        <option value="">Select transmission</option>
+                                        <option value="Manual">Manual</option>
+                                        <option value="Automatic">Automatic</option>
+                                        <option value="CVT">CVT</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a transmission type</div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="features" class="form-label">Features</label>
+                                    <input type="text" class="form-control" id="features" name="features" placeholder="AC, Power Windows, Bluetooth, etc. (comma-separated)">
+                                    <div class="form-text">Enter features separated by commas</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required placeholder="Describe the car's condition, history, and any notable features..."></textarea>
+                            <div class="invalid-feedback">Description is required</div>
+                        </div>
+
+                        <!-- Images -->
+                        <div class="mb-4">
+                            <label for="images" class="form-label">Car Images *</label>
+                            <input type="file" class="form-control" id="images" name="images" multiple accept="image/*" required>
+                            <div class="form-text">Select multiple images (max 10, 5MB each). First image will be the main photo.</div>
+                            <div class="invalid-feedback">At least one image is required</div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/admin/cars" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Add Car
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Panel -->
+        <div class="col-lg-4">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-lightbulb"></i> Tips for Adding Cars</h6>
+                </div>
+                <div class="card-body">
+                    <h6>Photos:</h6>
+                    <ul class="small">
+                        <li>Use high-quality images</li>
+                        <li>Include exterior, interior, and engine photos</li>
+                        <li>Show any damage or wear clearly</li>
+                        <li>First image becomes the main photo</li>
+                    </ul>
+
+                    <h6>Description:</h6>
+                    <ul class="small">
+                        <li>Be honest about condition</li>
+                        <li>Mention recent repairs or maintenance</li>
+                        <li>Include any issues or concerns</li>
+                        <li>Highlight special features</li>
+                    </ul>
+
+                    <h6>Pricing:</h6>
+                    <ul class="small">
+                        <li>Research similar vehicles</li>
+                        <li>Consider mileage and condition</li>
+                        <li>Remember: maximum $3,000</li>
+                        <li>Price competitively for quick sale</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Price validation
+    const priceInput = document.getElementById('price');
+    priceInput.addEventListener('input', function() {
+        const price = parseFloat(this.value);
+        if (price > 3000) {
+            this.setCustomValidity('Price must be under $3000');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+    // Image preview
+    const imageInput = document.getElementById('images');
+    imageInput.addEventListener('change', function() {
+        const files = this.files;
+        if (files.length > 10) {
+            alert('Maximum 10 images allowed');
+            this.value = '';
+        }
+    });
+});
+</script>

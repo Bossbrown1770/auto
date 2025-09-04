@@ -1,0 +1,222 @@
+<% layout('../layout') %>
+
+<div class="container-fluid py-4">
+    <!-- Dashboard Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2"><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <a href="/admin/cars/add" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add Car
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Cars</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalCars || 0 %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-car-front text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Available Cars</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.availableCars || 0 %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalOrders || 0 %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-receipt text-info" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.pendingOrders || 0 %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-clock text-warning" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/cars/add" class="btn btn-primary btn-block">
+                                <i class="bi bi-plus-circle"></i> Add New Car
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/cars" class="btn btn-info btn-block">
+                                <i class="bi bi-list"></i> Manage Cars
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/orders" class="btn btn-warning btn-block">
+                                <i class="bi bi-receipt-cutoff"></i> View Orders
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/users" class="btn btn-secondary btn-block">
+                                <i class="bi bi-people"></i> Manage Users
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <!-- Recent Orders -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
+                    <a href="/admin/orders" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <% if (recentOrders && recentOrders.length > 0) { %>
+                        <% recentOrders.forEach(function(order) { %>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-receipt"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold"><%= order.customerInfo.name %></div>
+                                    <div class="text-muted small">
+                                        <% if (order.carId) { %>
+                                            <%= order.carId.getTitle() %> - <%= order.getFormattedAmount() %>
+                                        <% } %>
+                                    </div>
+                                    <div class="text-muted small"><%= order.createdAt.toLocaleDateString() %></div>
+                                </div>
+                                <div>
+                                    <span class="badge bg-<% if (order.status === 'pending') { %>warning<% } else if (order.status === 'completed') { %>success<% } else { %>secondary<% } %>">
+                                        <%= order.status %>
+                                    </span>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="text-center text-muted py-4">
+                            <i class="bi bi-receipt" style="font-size: 3rem;"></i>
+                            <p class="mt-2">No recent orders</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Cars -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Cars</h6>
+                    <a href="/admin/cars" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <% if (recentCars && recentCars.length > 0) { %>
+                        <% recentCars.forEach(function(car) { %>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-3">
+                                    <% if (car.images && car.images.length > 0) { %>
+                                        <img src="/uploads/<%= car.images[0] %>" alt="<%= car.getTitle() %>" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <% } else { %>
+                                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="bi bi-car-front text-white"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold"><%= car.getTitle() %></div>
+                                    <div class="text-muted small"><%= car.getFormattedPrice() %></div>
+                                    <div class="text-muted small"><%= car.createdAt.toLocaleDateString() %></div>
+                                </div>
+                                <div>
+                                    <span class="badge bg-<%= car.isAvailable ? 'success' : 'danger' %>">
+                                        <%= car.isAvailable ? 'Available' : 'Sold' %>
+                                    </span>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="text-center text-muted py-4">
+                            <i class="bi bi-car-front" style="font-size: 3rem;"></i>
+                            <p class="mt-2">No cars added yet</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left-primary {
+    border-left: .25rem solid #4e73df!important;
+}
+.border-left-success {
+    border-left: .25rem solid #1cc88a!important;
+}
+.border-left-info {
+    border-left: .25rem solid #36b9cc!important;
+}
+.border-left-warning {
+    border-left: .25rem solid #f6c23e!important;
+}
+.btn-block {
+    width: 100%;
+}
+</style>
